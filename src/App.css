@@ -379,6 +379,10 @@
   padding: 28px 24px 80px;
 }
 
+.editor-page:has(.editor-board-view) .editor-main {
+  max-width: 1320px;
+}
+
 .editor-page-header {
   margin-bottom: 32px;
 }
@@ -394,6 +398,10 @@
   color: var(--text);
   line-height: 1.5;
   max-width: 52ch;
+}
+
+.editor-back-bar {
+  margin-top: 16px;
 }
 
 .editor-input-block {
@@ -791,6 +799,7 @@ a.btn {
 
 .editor-board-view {
   padding-bottom: 48px;
+  min-height: min(92vh, 1100px);
 }
 
 .editor-board-toolbar {
@@ -816,19 +825,20 @@ a.btn {
 
 .kanban-board {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   overflow-x: auto;
   padding-bottom: 8px;
+  min-height: min(78vh, 920px);
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
 }
 
 .kanban-column {
-  flex: 0 0 min(260px, 85vw);
+  flex: 0 0 min(312px, 78vw);
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  max-height: min(70vh, 720px);
+  max-height: min(90vh, 1040px);
   position: relative;
   z-index: 0;
 }
@@ -863,7 +873,7 @@ a.btn {
 
 .kanban-column-body {
   flex: 1;
-  min-height: 120px;
+  min-height: min(68vh, 820px);
   padding: 8px;
   border-radius: 12px;
   background: var(--bg);
@@ -915,7 +925,7 @@ a.btn {
 .kanban-card-overlay {
   box-shadow: var(--shadow);
   cursor: grabbing;
-  max-width: min(260px, 85vw);
+  max-width: min(312px, 78vw);
 }
 
 .kanban-card-top {

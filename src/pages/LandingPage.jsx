@@ -9,7 +9,7 @@ export default function LandingPage() {
         <section className="hero-section" aria-labelledby="hero-heading">
           <div className="hero-inner">
             <div className="hero-copy">
-              <p className="landing-eyebrow">PMO-ready structure</p>
+              <p className="landing-eyebrow">TaskForge AI</p>
               <h1 id="hero-heading">
                 From messy briefs to{' '}
                 <span className="hero-highlight">clear developer work</span>
@@ -143,7 +143,7 @@ export default function LandingPage() {
 
       <footer className="site-footer">
         <div className="site-footer-inner">
-          <span className="site-footer-brand">Brief → Tasks</span>
+          <span className="site-footer-brand">TaskForge AI</span>
           <Link to="/editor" className="site-footer-link">
             Editor
           </Link>

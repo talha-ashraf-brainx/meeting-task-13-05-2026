@@ -53,8 +53,10 @@ export default function EditorPage() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [dragOver, setDragOver] = useState(false)
+  const [inputPanelVisible, setInputPanelVisible] = useState(true)
   const fileInputRef = useRef(null)
   const outputAnchorRef = useRef(null)
+  const inputBlockRef = useRef(null)
 
   useEffect(() => {
     if (!result) return
@@ -63,6 +65,16 @@ export default function EditorPage() {
       block: 'start',
     })
   }, [result])
+
+  const openInputPanel = useCallback(() => {
+    setInputPanelVisible(true)
+    requestAnimationFrame(() => {
+      inputBlockRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    })
+  }, [])
 
   const addFiles = useCallback((list) => {
     const next = Array.from(list || []).filter((f) => {
@@ -93,6 +105,7 @@ export default function EditorPage() {
   const onSubmit = useCallback(async () => {
     setError(null)
     setResult(null)
+    setInputPanelVisible(true)
     setLoading(true)
     try {
       const fd = new FormData()
@@ -110,6 +123,7 @@ export default function EditorPage() {
         return
       }
       setResult(payload)
+      setInputPanelVisible(false)
     } catch {
       setError('Network error')
     } finally {
@@ -122,14 +136,27 @@ export default function EditorPage() {
       <SiteHeader />
       <main className="editor-main">
         <header className="editor-page-header">
-          <h1 className="editor-page-title">Editor</h1>
+          <h1 className="editor-page-title">TaskForge AI · Editor</h1>
           <p className="editor-page-lede">
-            Add your brief and attachments, then generate. Results appear below
-            the form.
+            {result && !inputPanelVisible
+              ? 'Breakdown below. Open the editor to change your input or run again.'
+              : 'Add your brief and attachments, then generate. Results appear below the form.'}
           </p>
+          {result && !inputPanelVisible ? (
+            <div className="editor-back-bar">
+              <button type="button" className="btn secondary" onClick={openInputPanel}>
+                Back to editor
+              </button>
+            </div>
+          ) : null}
         </header>
 
-        <section className="editor-input-block" aria-labelledby="input-heading">
+        {(!result || inputPanelVisible) ? (
+        <section
+          ref={inputBlockRef}
+          className="editor-input-block"
+          aria-labelledby="input-heading"
+        >
           <h2 id="input-heading" className="editor-section-title">
             Your input
           </h2>
@@ -225,6 +252,7 @@ export default function EditorPage() {
             ) : null}
           </div>
         </section>
+        ) : null}
 
         {result ? (
           <div
