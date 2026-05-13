@@ -1,9 +1,50 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { SiteHeader } from '../components/SiteHeader.jsx'
 import { BriefResults } from '../components/BriefResults.jsx'
+import { TicketBoard } from '../components/TicketBoard.jsx'
+import { ticketsFingerprint, useKanbanBoard } from '../hooks/useKanbanBoard.js'
 import { apiUrl } from '../lib/apiUrl.js'
 
 const ACCEPT_FILES = '.pdf,.md'
+
+function EditorBreakdownOutput({ result }) {
+  const [boardView, setBoardView] = useState(false)
+  const { items, setItems } = useKanbanBoard(result.jira_tickets)
+
+  if (boardView && result.jira_tickets?.length) {
+    return (
+      <div className="editor-board-view">
+        <div className="editor-board-toolbar">
+          <button
+            type="button"
+            className="btn secondary"
+            onClick={() => setBoardView(false)}
+          >
+            Back to breakdown
+          </button>
+        </div>
+        <div className="editor-board-heading">
+          <h2 className="editor-board-title">Ticket board</h2>
+          <p className="editor-board-lede">
+            Drag cards between columns. Details open inside each card.
+          </p>
+        </div>
+        <TicketBoard items={items} setItems={setItems} />
+      </div>
+    )
+  }
+
+  return (
+    <BriefResults
+      result={result}
+      onOpenTicketBoard={
+        result.jira_tickets?.length
+          ? () => setBoardView(true)
+          : undefined
+      }
+    />
+  )
+}
 
 export default function EditorPage() {
   const [brief, setBrief] = useState('')
@@ -186,8 +227,11 @@ export default function EditorPage() {
         </section>
 
         {result ? (
-          <div ref={outputAnchorRef}>
-            <BriefResults result={result} />
+          <div
+            key={ticketsFingerprint(result.jira_tickets)}
+            ref={outputAnchorRef}
+          >
+            <EditorBreakdownOutput result={result} />
           </div>
         ) : null}
 

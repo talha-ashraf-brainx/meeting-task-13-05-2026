@@ -1,7 +1,7 @@
 import { SubList } from './SubList.jsx'
 import { toMarkdown } from '../lib/briefMarkdown.js'
 
-export function BriefResults({ result }) {
+export function BriefResults({ result, onOpenTicketBoard }) {
   if (!result) return null
 
   const md = toMarkdown(result)
@@ -43,10 +43,24 @@ export function BriefResults({ result }) {
 
   return (
     <div className="editor-output">
-      <h2 className="editor-output-title">Breakdown</h2>
+      <div className="breakdown-header-row">
+        <h2 className="editor-output-title">Breakdown</h2>
+        {onOpenTicketBoard ? (
+          <button
+            type="button"
+            className="btn primary breakdown-board-btn"
+            onClick={onOpenTicketBoard}
+          >
+            Ticket board
+          </button>
+        ) : null}
+      </div>
       <p className="editor-output-intro">
         Review structured output below. Copy or download for your PMO or issue
         tracker.
+        {onOpenTicketBoard
+          ? ' Use Ticket board to move Jira-style tickets across statuses.'
+          : ''}
       </p>
 
       <section className="panel toolbar">
@@ -145,36 +159,6 @@ export function BriefResults({ result }) {
               </li>
             ))}
           </ol>
-        ) : (
-          <p className="muted">None.</p>
-        )}
-      </section>
-
-      <section className="panel">
-        <h2>Jira-oriented tickets</h2>
-        {result.jira_tickets?.length ? (
-          <ul className="card-list">
-            {result.jira_tickets.map((j) => (
-              <li
-                key={`${j.summary}-${j.issue_type}`}
-                className="card jira-card"
-              >
-                <div className="jira-head">
-                  <span className="issue-type">{j.issue_type}</span>
-                  <h3>{j.summary}</h3>
-                </div>
-                <p className="task-desc">{j.description}</p>
-                {j.labels?.length ? (
-                  <p className="meta">
-                    <span className="meta-k">Labels</span> {j.labels.join(', ')}
-                  </p>
-                ) : null}
-                <SubList title="Acceptance criteria" items={j.acceptance_criteria} />
-                <SubList title="Brief excerpts" items={j.brief_excerpts} />
-                <SubList title="Unknowns / blocking" items={j.unknowns_blocking} />
-              </li>
-            ))}
-          </ul>
         ) : (
           <p className="muted">None.</p>
         )}
